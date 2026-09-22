@@ -1,4 +1,4 @@
-# Arbol-BInario
+# Arbol-Binario
 Tarea 7. Gestión de un Árbol Binario de Búsqueda.
 Fecha de Entrega: 25 de Septiembre
 
