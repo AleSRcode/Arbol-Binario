@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Arbol Binario.vcxproj" Id="e92997c4-574d-4255-83d1-b78accc3b4c1" />
+</Solution>

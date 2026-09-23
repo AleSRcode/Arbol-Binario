@@ -4,10 +4,10 @@
 using namespace std;
 
 struct Nodo {
-int dato;
-Nodo *izquierda;
-Nodo *derecha;
-}
+	int dato;
+	Nodo* izquierda;
+	Nodo* derecha;
+};
 
 int main()
 {
