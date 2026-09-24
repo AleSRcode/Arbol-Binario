@@ -47,23 +47,46 @@ Nodo* EncontrarNodoParaReemplazar(Nodo* nodoAEliminar) //|||SOLO USAR SI EL Nodo
 	}
 	return nodoBusqueda;
 }
-Nodo* EliminarNodoConUnHijosinHijos(Nodo* nodoAEliminar, Nodo* nodoPadre) //|||Elimina nodos con un hijo o sin hijos|||
+
+Nodo* EliminarNodoConUnHijosinHijos(Nodo* nodoAEliminar, Nodo* nodoPadre, Nodo*& raiz) 
+//|||Elimina nodos con UN HIJO o SIN HIJOS|||
 {
-	Nodo* nodoReemplazo = EncontrarNodoParaReemplazar(nodoAEliminar); //Usamos la funcion para encontrar el nodo que reemplazara al nodo a eliminar
-	if (nodoPadre->izquierda == nodoAEliminar) { //Si el nodo a eliminar es hijo izquierdo del padre, reemplazamos el hijo izquierdo del padre con el nodo de reemplazo
-		nodoPadre->izquierda = nodoReemplazo;
+	// Verificar que el nodo tiene UN SOLO hijo o NINGUNO
+	bool tieneHijoIzquierdo = (nodoAEliminar->izquierda != NULL);
+	bool tieneHijoDerecho = (nodoAEliminar->derecha != NULL);
+	
+	// Si tiene DOS hijos, NO usamos este método
+	if (tieneHijoIzquierdo && tieneHijoDerecho) {
+		cout << "Error: Este nodo tiene dos hijos" << endl;
+		return raiz;
 	}
-	else if (nodoPadre->derecha == nodoAEliminar) { //Si el nodo a eliminar es hijo derecho del padre, reemplazamos el hijo derecho del padre con el nodo de reemplazo
-		nodoPadre->derecha = nodoReemplazo;
+	
+	// El nodo reemplazo es el hijo que tenga (o NULL si no tiene)
+	Nodo* nodoReemplazo = NULL;
+	
+	if (tieneHijoIzquierdo) {
+		nodoReemplazo = nodoAEliminar->izquierda;
 	}
-	if (nodoReemplazo->izquierda != NULL) { //Si el nodo de reemplazo tiene un hijo izquierdo, lo asignamos al hijo izquierdo del nodo a eliminar
-		nodoReemplazo->izquierda = nodoAEliminar->izquierda;
+	else if (tieneHijoDerecho) {
+		nodoReemplazo = nodoAEliminar->derecha;
 	}
-	if (nodoReemplazo->derecha != NULL) { //Si el nodo de reemplazo tiene un hijo derecho, lo asignamos al hijo derecho del nodo a eliminar
-		nodoReemplazo->derecha = nodoAEliminar->derecha;
+	
+	// CASO 1: Si el nodo a eliminar es la raiz
+	if (nodoAEliminar == raiz) {
+		raiz = nodoReemplazo; // El reemplazo (o NULL) es la nueva raiz
 	}
+	// CASO 2: Si el nodo a eliminar NO es la raiz
+	else {
+		if (nodoPadre->izquierda == nodoAEliminar) {
+			nodoPadre->izquierda = nodoReemplazo;
+		}
+		else if (nodoPadre->derecha == nodoAEliminar) {
+			nodoPadre->derecha = nodoReemplazo;
+		}
+	}
+	
 	delete nodoAEliminar;
-	return nodoReemplazo;
+	return raiz;
 }
 
 int main()
