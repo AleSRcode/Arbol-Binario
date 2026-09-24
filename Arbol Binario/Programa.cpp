@@ -28,6 +28,30 @@ Nodo* Insertar(Nodo* raiz, int valor)
 	return raiz;
 }
 
+Nodo* Buscar(Nodo* raiz, int valor)
+{
+	Nodo* nodoActual = raiz;
+
+	while (nodoActual != NULL && nodoActual->dato != valor)
+	{
+		if (nodoActual->dato > valor) {
+			nodoActual = nodoActual->izquierda;
+		}
+		else {
+			nodoActual = nodoActual->derecha;
+		}
+	}
+
+	if (nodoActual == NULL) {
+		cout << "El nodo de valor " << valor << " no existe\n";
+	}
+	else {
+		cout << "El nodo de valor " << valor << " fue encontrado\n";
+	}
+
+	return nodoActual; // Devuelve el puntero al nodo si existe, o NULL si no existe
+}
+
 
 void ElimNodoCon1o0Hijos(Nodo* nodoAEliminar, Nodo* nodoPadre, Nodo*& raiz) 
 //|||Elimina nodos con UN HIJO o SIN HIJOS|||
