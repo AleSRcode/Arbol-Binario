@@ -28,38 +28,13 @@ Nodo* Insertar(Nodo* raiz, int valor)
 	return raiz;
 }
 
-Nodo* EncontrarNodoParaReemplazar(Nodo* nodoAEliminar) //|||SOLO USAR SI EL NodoAEliminar TIENE HIJOS|||
-{
-	Nodo* nodoBusqueda = NULL;
-	if (nodoAEliminar->derecha != NULL) {
-		nodoBusqueda = nodoAEliminar->derecha;
-		while (nodoBusqueda->izquierda != NULL)
-		{
-			nodoBusqueda = nodoBusqueda->izquierda;
-		}
-	}
-	else if (nodoAEliminar->izquierda != NULL) {
-		nodoBusqueda = nodoAEliminar->izquierda;
-		while (nodoBusqueda->derecha != NULL)
-		{
-			nodoBusqueda = nodoBusqueda->derecha;
-		}
-	}
-	return nodoBusqueda;
-}
 
-Nodo* EliminarNodoConUnHijosinHijos(Nodo* nodoAEliminar, Nodo* nodoPadre, Nodo*& raiz) 
+void ElimNodoCon1o0Hijos(Nodo* nodoAEliminar, Nodo* nodoPadre, Nodo*& raiz) 
 //|||Elimina nodos con UN HIJO o SIN HIJOS|||
 {
 	// Verificar que el nodo tiene UN SOLO hijo o NINGUNO
 	bool tieneHijoIzquierdo = (nodoAEliminar->izquierda != NULL);
 	bool tieneHijoDerecho = (nodoAEliminar->derecha != NULL);
-	
-	// Si tiene DOS hijos, NO usamos este método
-	if (tieneHijoIzquierdo && tieneHijoDerecho) {
-		cout << "Error: Este nodo tiene dos hijos" << endl;
-		return raiz;
-	}
 	
 	// El nodo reemplazo es el hijo que tenga (o NULL si no tiene)
 	Nodo* nodoReemplazo = NULL;
@@ -86,7 +61,60 @@ Nodo* EliminarNodoConUnHijosinHijos(Nodo* nodoAEliminar, Nodo* nodoPadre, Nodo*&
 	}
 	
 	delete nodoAEliminar;
-	return raiz;
+}
+
+void ElimNodoCon2Hijos(Nodo* nodoAEliminar, Nodo*& raiz) //|||SOLO USAR SI EL NodoAEliminar TIENE HIJOS|||
+{
+	Nodo* nodoPadreReemplazo = nodoAEliminar;
+	Nodo* nodoReemplazo = nodoAEliminar->derecha;
+	if (nodoReemplazo->izquierda != NULL) {
+		while (nodoReemplazo->izquierda != NULL)
+		{
+			nodoPadreReemplazo = nodoReemplazo;
+			nodoReemplazo = nodoReemplazo->izquierda;
+		}
+	}
+	else {
+		nodoReemplazo = nodoAEliminar->izquierda;
+		while (nodoReemplazo->derecha != NULL)
+		{
+			nodoPadreReemplazo = nodoReemplazo;
+			nodoReemplazo = nodoReemplazo->derecha;
+		}
+	}
+	nodoAEliminar->dato = nodoReemplazo->dato;
+
+	ElimNodoCon1o0Hijos(nodoReemplazo, nodoPadreReemplazo, raiz);
+}
+
+void Eliminar(Nodo*& nodoRaiz, int datoNodoEliminar)
+{
+	Nodo* nodoActual = nodoRaiz;
+	Nodo* nodoPadre = NULL;
+
+	while (nodoActual != NULL && nodoActual->dato != datoNodoEliminar)
+	{
+		nodoPadre = nodoActual;
+		if (nodoActual->dato > datoNodoEliminar) {
+			nodoActual = nodoActual->izquierda;
+		}
+		else {
+			nodoActual = nodoActual->derecha;
+		}
+	}
+
+	if (nodoActual == NULL) {
+		cout << "El nodo de valor " << datoNodoEliminar << " no existe\n"; 
+		return;
+	}
+	if (nodoActual->izquierda != NULL && nodoActual->derecha != NULL)
+	{
+		ElimNodoCon2Hijos(nodoActual, nodoRaiz);
+	}
+	else
+	{
+		ElimNodoCon1o0Hijos(nodoActual, nodoPadre, nodoRaiz);
+	}
 }
 
 int main()
