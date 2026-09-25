@@ -9,23 +9,26 @@ struct Nodo {
 	Nodo* derecha;
 };
 
-Nodo* Insertar(Nodo* raiz, int valor)
+void Insertar(Nodo*& raiz, int valor)
 {
 	if (raiz == NULL) { //Si el arbol (o subarbol) esta vacio, aqui va el nuevo nodo
 		Nodo* nuevoNodo = new Nodo;
 		nuevoNodo->dato = valor;
 		nuevoNodo->izquierda = NULL;
 		nuevoNodo->derecha = NULL;
-		return nuevoNodo;
+		raiz = nuevoNodo;
+		cout << "El nodo de valor " << valor << " se inserto correctamente en el arbol\n";
+		return;
 	}
 	if (valor > raiz->dato) { //Si el valor es mayor que el nodo actual, va al subarbol derecho
-		raiz->derecha = Insertar(raiz->derecha, valor);
+		Insertar(raiz->derecha, valor);
 	}
 	else if (valor < raiz->dato) { //Si el valor es menor que el nodo actual, va al subarbol izquierdo
-		raiz->izquierda = Insertar(raiz->izquierda, valor);
+		Insertar(raiz->izquierda, valor);
 	}
-	//Si el valor es igual, ya existe y no se inserta
-	return raiz;
+	else {
+		cout << "El nodo de valor " << valor << " ya existe en el arbol\n";
+	}
 }
 
 Nodo* Buscar(Nodo* raiz, int valor)
@@ -89,12 +92,12 @@ void ElimNodoCon1o0Hijos(Nodo* nodoAEliminar, Nodo* nodoPadre, Nodo*& raiz)
 
 void ElimNodoCon2Hijos(Nodo* nodoAEliminar, Nodo*& raiz) //|||SOLO USAR SI EL NodoAEliminar TIENE HIJOS|||
 {
-	Nodo* nodoPadreReemplazo = nodoAEliminar;
+	Nodo* nodoPadreDeReemplazo = nodoAEliminar;
 	Nodo* nodoReemplazo = nodoAEliminar->derecha;
 	if (nodoReemplazo->izquierda != NULL) {
 		while (nodoReemplazo->izquierda != NULL)
 		{
-			nodoPadreReemplazo = nodoReemplazo;
+			nodoPadreDeReemplazo = nodoReemplazo;
 			nodoReemplazo = nodoReemplazo->izquierda;
 		}
 	}
@@ -102,18 +105,18 @@ void ElimNodoCon2Hijos(Nodo* nodoAEliminar, Nodo*& raiz) //|||SOLO USAR SI EL No
 		nodoReemplazo = nodoAEliminar->izquierda;
 		while (nodoReemplazo->derecha != NULL)
 		{
-			nodoPadreReemplazo = nodoReemplazo;
+			nodoPadreDeReemplazo = nodoReemplazo;
 			nodoReemplazo = nodoReemplazo->derecha;
 		}
 	}
 	nodoAEliminar->dato = nodoReemplazo->dato;
 
-	ElimNodoCon1o0Hijos(nodoReemplazo, nodoPadreReemplazo, raiz);
+	ElimNodoCon1o0Hijos(nodoReemplazo, nodoPadreDeReemplazo, raiz);
 }
 
-void Eliminar(Nodo*& nodoRaiz, int datoNodoEliminar)
+void Eliminar(Nodo*& raiz, int datoNodoEliminar)
 {
-	Nodo* nodoActual = nodoRaiz;
+	Nodo* nodoActual = raiz;
 	Nodo* nodoPadre = NULL;
 
 	while (nodoActual != NULL && nodoActual->dato != datoNodoEliminar)
@@ -133,11 +136,11 @@ void Eliminar(Nodo*& nodoRaiz, int datoNodoEliminar)
 	}
 	if (nodoActual->izquierda != NULL && nodoActual->derecha != NULL)
 	{
-		ElimNodoCon2Hijos(nodoActual, nodoRaiz);
+		ElimNodoCon2Hijos(nodoActual, raiz);
 	}
 	else
 	{
-		ElimNodoCon1o0Hijos(nodoActual, nodoPadre, nodoRaiz);
+		ElimNodoCon1o0Hijos(nodoActual, nodoPadre, raiz);
 	}
 }
 
